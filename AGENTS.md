@@ -80,6 +80,8 @@ Present the schema information clearly before generating analysis queries. Under
 
 Generate SQL queries based on the user's analysis requirements. See `references/sql-operations.md` for the complete syntax reference including time travel, snapshot inspection, write operations, and cross-format joins.
 
+Always show the SQL being executed to the user in a code block before presenting the results.
+
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
