@@ -1,0 +1,9 @@
+# Downloaded extension binaries
+*.duckdb_extension
+*.dylib
+*.so
+*.tar.gz
+
+# DuckDB database files
+*.duckdb
+*.wal
