@@ -50,13 +50,13 @@ The `expanded_assets` endpoint returns the asset list HTML fragment for a specif
 
 Release tags follow: `{ext_version}-{codename}` (e.g., `v0.0.6-andium`).
 
-Tarball names follow: `duckdb-paimon-{ext_version}-{codename}-{duckdb_version}-{platform}.tar.gz`
+Tarball names follow: `duckdb-paimon-{ext_version}-{codename}-v{duckdb_version}-{platform}.tar.gz`
 
 For example, with `osx-arm64`, the matching assets might be:
-- `duckdb-paimon-v0.0.6-andium-v1.5.2-osx-arm64.tar.gz`
-- `duckdb-paimon-v0.0.6-andium-v1.4.4-osx-arm64.tar.gz`
+- `duckdb-paimon-v0.0.6-variegata-v1.5.2-osx-arm64.tar.gz` (from tag `v0.0.6-variegata`)
+- `duckdb-paimon-v0.0.6-andium-v1.4.4-osx-arm64.tar.gz` (from tag `v0.0.6-andium`)
 
-From the matching assets, extract the available `{duckdb_version}` values. These are the DuckDB versions supported by the extension. Prefer the highest version number.
+From the matching assets, extract the available `{duckdb_version}` values (without the `v` prefix, e.g., `1.5.2`). These are the DuckDB versions supported by the extension. Prefer the highest version number.
 
 If multiple extension releases exist, prefer the one with the latest release tag (highest `{ext_version}`).
 
