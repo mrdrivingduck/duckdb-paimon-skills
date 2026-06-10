@@ -70,17 +70,7 @@ git ls-remote --tags https://github.com/polardb/duckdb-paimon.git
 
 This returns tag names (e.g., `v0.0.6-variegata`) but not the full asset list. Construct candidate download URLs by combining the tag, known DuckDB versions, and platform, then probe with `curl -I` to verify they exist.
 
-## Step 2: Ensure DuckDB is Installed
-
-```bash
-duckdb -version
-```
-
-- **DuckDB not found** — Install the preferred `{duckdb_version}` determined in Step 1 (see [Installing DuckDB](#installing-duckdb) below).
-- **Version matches** one of the supported versions from Step 1 — Proceed to Step 3.
-- **Version does not match** — Advise the user to install a supported version. The preferred version is the highest `{duckdb_version}` from Step 1.
-
-## Step 3: Check Local Installation
+## Step 2: Check Local Installation
 
 The default install location is `~/.duckdb-paimon/`. The tarball name from Step 1 (without the `.tar.gz` suffix) is the expected directory name. Check whether it already exists locally:
 
@@ -88,9 +78,9 @@ The default install location is `~/.duckdb-paimon/`. The tarball name from Step 
 ls ~/.duckdb-paimon/{tarball_basename}/paimon.duckdb_extension
 ```
 
-If the file exists, the latest version is already installed — note its absolute path and skip to extension loading (Phase 3 in AGENTS.md). Otherwise proceed to Step 4.
+If the file exists, the latest version is already installed — note its absolute path and skip to extension loading (Phase 3 in AGENTS.md). Otherwise proceed to Step 3.
 
-## Step 4: Download and Extract
+## Step 3: Download and Extract
 
 The `{download_url}` from Step 1 is a relative path like `/polardb/duckdb-paimon/releases/download/...`. Prepend `https://github.com` to form the full URL.
 
@@ -133,12 +123,29 @@ ls ~/.duckdb-paimon/*/paimon.duckdb_extension
 
 The directory should also contain companion shared libraries (`libpaimon.dylib` on macOS, or `.so` on Linux). Do not move `paimon.duckdb_extension` out of its directory — it expects the companion libraries to be co-located.
 
-## Installing DuckDB
+## Step 4: Ensure DuckDB is Installed
 
-Install the specific `{duckdb_version}` determined in Step 1 (works on both macOS and Linux):
+`{duckdb_version}` is the preferred version determined in Step 1 (without the `v` prefix, e.g., `1.5.2`).
+
+The official install script places the binary at `~/.duckdb/cli/{duckdb_version}/duckdb`, which is not on `PATH` by default. Always export the path first so that both an existing installation and a fresh one are discoverable:
 
 ```bash
-curl https://install.duckdb.org | DUCKDB_VERSION={duckdb_version} sh
+export PATH="$HOME/.duckdb/cli/{duckdb_version}:$PATH"
 ```
 
-See https://duckdb.org/install/ for more options.
+Then check:
+
+```bash
+duckdb -version
+```
+
+- **DuckDB not found** — Install `{duckdb_version}`:
+
+  ```bash
+  curl https://install.duckdb.org | DUCKDB_VERSION={duckdb_version} sh
+  ```
+
+  See https://duckdb.org/install/ for more options. After installation, `duckdb -version` should work because `PATH` was already exported above.
+
+- **Version matches** one of the supported versions from Step 1 — Done.
+- **Version does not match** — Advise the user to install a supported version.
