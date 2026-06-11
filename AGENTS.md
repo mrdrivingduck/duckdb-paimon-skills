@@ -37,13 +37,6 @@ duckdb -unsigned
 LOAD '/absolute/path/to/paimon.duckdb_extension';
 ```
 
-If loading within an existing DuckDB session:
-
-```sql
-SET allow_unsigned_extensions = true;
-LOAD '/absolute/path/to/paimon.duckdb_extension';
-```
-
 ## Phase 4: Catalog Attachment
 
 Ask the user for their Paimon warehouse path, then attach it:
@@ -96,7 +89,7 @@ Do not summarize results from hidden ad hoc SQL. The user must be able to see wh
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| `Catalog Error: ... not allowed for unsigned extensions` | DuckDB not started with `-unsigned` | Restart with `duckdb -unsigned` or `SET allow_unsigned_extensions=true` |
+| `Catalog Error: ... not allowed for unsigned extensions` | DuckDB not started with `-unsigned` | Exit the session, restart with `duckdb -unsigned`, then load the extension again |
 | `Extension ... version mismatch` | DuckDB version != extension build version | Re-run Phase 1 to verify version alignment |
 | `Failed to load ... libpaimon.dylib` | Companion shared libraries missing | Re-extract the release tarball; don't move `paimon.duckdb_extension` out of its directory |
 | `SHOW ALL TABLES` returns empty | Wrong warehouse path, or not a Paimon warehouse | Verify path contains `snapshot/` and `manifest/` subdirectories |
