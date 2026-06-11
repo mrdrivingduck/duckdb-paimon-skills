@@ -19,6 +19,8 @@ Version matching is dynamic — the setup guide queries GitHub Releases API to f
 
 Read `AGENTS.md` for the agent workflow covering environment check, extension download, loading, catalog attachment, schema exploration, and query generation.
 
+When running analysis queries, follow the SQL visibility protocol in `AGENTS.md`: show each generated SQL statement before execution and include the executed SQL with the results.
+
 Reference docs (load on demand):
 
 - `references/setup-guide.md` -- Platform detection, DuckDB installation, extension download, and extraction steps.

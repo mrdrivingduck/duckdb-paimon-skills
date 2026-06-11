@@ -80,7 +80,17 @@ Present the schema information clearly before generating analysis queries. Under
 
 Generate SQL queries based on the user's analysis requirements. See `references/sql-operations.md` for the complete syntax reference including time travel, snapshot inspection, write operations, and cross-format joins.
 
-Always show the SQL being executed to the user in a code block before presenting the results.
+### SQL Visibility Protocol
+
+For every SQL statement that is generated and executed on the user's behalf:
+
+1. Show the exact SQL to the user in a fenced `sql` code block before executing it.
+2. Execute only SQL that has already been shown, except for trivial session setup commands already documented in earlier phases.
+3. Enable DuckDB CLI timing with `.timer on` before running analysis SQL when the CLI supports it.
+4. When presenting results, include an "Executed SQL" section that lists the statements used to produce those results and their DuckDB-reported execution time when available. If several exploratory statements were run, include all of them in execution order.
+5. If a statement must be changed after an error, show the revised SQL before running it.
+
+Do not summarize results from hidden ad hoc SQL. The user must be able to see which SQL produced each answer and whether DuckDB reported how long each statement took to run.
 
 ## Troubleshooting
 
