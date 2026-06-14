@@ -1,8 +1,8 @@
 # duckdb-paimon-analyze
 
-Make duckdb-paimon agentic. (🤖 + 🦆)
+Make duckdb-paimon ready for agentic data analysis. (🤖 + 🦆)
 
-A reusable skill for analyzing Apache Paimon warehouses with DuckDB and the duckdb-paimon extension.
+This repository contains the `duckdb-paimon-analyze` skill, a reusable skill for analyzing Apache Paimon warehouses with DuckDB and the duckdb-paimon extension.
 
 ## What It Does
 
