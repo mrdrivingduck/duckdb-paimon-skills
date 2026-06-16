@@ -25,24 +25,17 @@ Outcomes:
 
 Follow `references/setup-guide.md` Steps 3–4 to download and install the extension. Save the absolute path to `paimon.duckdb_extension` for Phase 3.
 
-## Phase 3: Extension Loading
+## Phase 3: DuckDB Invocation & Catalog Attachment
 
-Start DuckDB with unsigned extension support and load the binary:
+Ask the user for their Paimon warehouse path, then run DuckDB non-interactively with unsigned extension support. For agent-driven work, use this fixed stdin-script pattern:
 
 ```bash
-duckdb -unsigned
-```
-
-```sql
+duckdb -unsigned <<'SQL'
 LOAD '/absolute/path/to/paimon.duckdb_extension';
-```
-
-## Phase 4: Catalog Attachment
-
-Ask the user for their Paimon warehouse path, then attach it:
-
-```sql
 ATTACH '/path/to/warehouse' AS paimon_cat (TYPE paimon, READ_ONLY);
+.timer on
+-- analysis SQL statements go here
+SQL
 ```
 
 Use `READ_ONLY` by default to prevent accidental writes. Drop `READ_ONLY` only when the user explicitly intends to write data.
@@ -57,7 +50,7 @@ SHOW ALL TABLES;
 
 This should list the databases and tables in the warehouse. If empty, verify the warehouse path is correct and contains Paimon metadata (snapshot/manifest directories).
 
-## Phase 5: Schema Exploration
+## Phase 4: Schema Exploration
 
 Help the user understand what data is available:
 
@@ -69,7 +62,7 @@ SELECT * FROM paimon_cat.db_name.table_name LIMIT 5;
 
 Present the schema information clearly before generating analysis queries. Understanding column names, types, and sample values is essential for producing correct SQL.
 
-## Phase 6: Query & Analysis
+## Phase 5: Query & Analysis
 
 Generate SQL queries based on the user's analysis requirements. See `references/sql-operations.md` for the complete syntax reference including time travel, snapshot inspection, write operations, and cross-format joins.
 
@@ -79,17 +72,17 @@ For every SQL statement that is generated and executed on the user's behalf:
 
 1. Show the exact SQL to the user in a fenced `sql` code block before executing it.
 2. Execute only SQL that has already been shown, except for trivial session setup commands already documented in earlier phases.
-3. Enable DuckDB CLI timing with `.timer on` before running analysis SQL when the CLI supports it.
-4. When presenting results, include an "Executed SQL" section that lists the statements used to produce those results and their DuckDB-reported execution time when available. If several exploratory statements were run, include all of them in execution order.
+3. Report the `Run Time (s)` line printed by DuckDB for each analysis query. Do not use agent-side wall-clock timing as the query time.
+4. When presenting results, include an "Executed SQL" section that lists the statements used to produce those results. If several exploratory statements were run, include all of them in execution order.
 5. If a statement must be changed after an error, show the revised SQL before running it.
 
-Do not summarize results from hidden ad hoc SQL. The user must be able to see which SQL produced each answer and whether DuckDB reported how long each statement took to run.
+Do not summarize results from hidden ad hoc SQL. The user must be able to see which SQL produced each answer.
 
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| `Catalog Error: ... not allowed for unsigned extensions` | DuckDB not started with `-unsigned` | Exit the session, restart with `duckdb -unsigned`, then load the extension again |
+| `Catalog Error: ... not allowed for unsigned extensions` | DuckDB not started with `-unsigned` | Re-run the stdin script with `duckdb -unsigned`, including the `LOAD` statement before the query SQL |
 | `Extension ... version mismatch` | DuckDB version != extension build version | Re-run Phase 1 to verify version alignment |
 | `Failed to load ... libpaimon.dylib` | Companion shared libraries missing | Re-extract the release tarball; don't move `paimon.duckdb_extension` out of its directory |
 | `SHOW ALL TABLES` returns empty | Wrong warehouse path, or not a Paimon warehouse | Verify path contains `snapshot/` and `manifest/` subdirectories |

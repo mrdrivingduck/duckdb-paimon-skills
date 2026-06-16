@@ -78,7 +78,7 @@ The default install location is `~/.duckdb-paimon/`. The tarball name from Step 
 ls ~/.duckdb-paimon/{tarball_basename}/paimon.duckdb_extension
 ```
 
-If the file exists, the latest version is already installed — note its absolute path and skip to extension loading (Phase 3 in AGENTS.md). Otherwise proceed to Step 3.
+If the file exists, the latest version is already installed — note its absolute path and skip to DuckDB invocation and catalog attachment (Phase 3 in AGENTS.md). Otherwise proceed to Step 3.
 
 ## Step 3: Download and Extract
 
